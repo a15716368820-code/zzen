@@ -1,0 +1,31 @@
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #1f2937;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+.blog-card {
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.blog-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+body.theme-minimal {
+  --bg: #ffffff;
+  --card: #ffffff;
+  --text: #111827;
+}
+body.theme-dark {
+  --bg: #0b1220;
+  --card: #111827;
+  --text: #e5e7eb;
+}
+body.theme-dark .card {
+  background: var(--card);
+  color: var(--text);
+}
