@@ -44,7 +44,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {'context_processors': [
             'django.template.context_processors.request',
-            'django.contrib.auth.context_processors.auth',
+            'django.contrib.auth.middleware.AuthenticationMiddleware',
             'django.contrib.messages.context_processors.messages',
         ]},
     },
@@ -71,6 +71,9 @@ CACHES = {
     }
 }
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 LANGUAGE_CODE = 'zh-hans'
 TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
@@ -88,6 +91,8 @@ SECURE_SSL_REDIRECT = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "same-origin"
 X_FRAME_OPTIONS = "DENY"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
