@@ -1,17 +1,21 @@
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
+from django.core.cache import cache
+from django_ratelimit.decorators import ratelimit
 
 from .models import Post, Category, SiteSetting
 from .forms import CommentForm
 
 
 def get_site_setting():
-    setting = SiteSetting.objects.first()
+    setting = cache.get("site_setting")
     if not setting:
-        setting = SiteSetting.objects.create()
+        setting = SiteSetting.objects.first()
+        if not setting:
+            setting = SiteSetting.objects.create()
+        cache.set("site_setting", setting, 3600)
     return setting
 
 
@@ -56,6 +60,7 @@ class PostDetailView(DetailView):
         ctx["comment_form"] = CommentForm()
         return ctx
 
+    @ratelimit(key="ip", rate="5/m", block=True)
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = CommentForm(request.POST)
@@ -68,23 +73,3 @@ class PostDetailView(DetailView):
         ctx = self.get_context_data()
         ctx["comment_form"] = form
         return render(request, self.template_name, ctx)
-
-
-def rss_feed(request):
-    from django.contrib.syndication.views import Feed
-
-    class LatestPostsFeed(Feed):
-        title = "个人博客"
-        link = "/"
-        description = "个人博客 RSS"
-
-        def items(self):
-            return Post.objects.filter(status="published").order_by("-published_at")[:20]
-
-        def item_title(self, item):
-            return item.title
-
-        def item_description(self, item):
-            return item.summary or item.content[:200]
-
-    return LatestPostsFeed()(request)
