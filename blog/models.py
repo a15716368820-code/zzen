@@ -43,6 +43,11 @@ class Post(models.Model):
 
     class Meta:
         ordering = ["-published_at", "-created_at"]
+        indexes = [
+            models.Index(fields=["status", "-published_at"]),
+            models.Index(fields=["category", "-published_at"]),
+            models.Index(fields=["-created_at"]),
+        ]
         verbose_name = "文章"
         verbose_name_plural = "文章"
 
