@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from taggit.managers import TaggableManager
 from markdown import markdown
 from django.utils import timezone
+import bleach
 
 User = get_user_model()
 
@@ -49,9 +50,16 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        self.content_html = markdown(self.content)
+        html = markdown(self.content)
+        self.content_html = bleach.clean(
+            html,
+            tags=["p", "h1", "h2", "h3", "strong", "em", "ul", "ol", "li", "code", "pre", "blockquote", "img"],
+            attributes={"img": ["src", "alt"]},
+        )
+
         if self.status == "published" and not self.published_at:
             self.published_at = timezone.now()
+
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
