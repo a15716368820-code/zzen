@@ -6,6 +6,7 @@ services:
       - .env
     depends_on:
       - db
+      - redis
     volumes:
       - ./media:/app/media
       - ./staticfiles:/app/staticfiles
@@ -19,6 +20,12 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redis_data:/data
 
   nginx:
     image: nginx:latest
@@ -34,3 +41,4 @@ services:
 
 volumes:
   postgres_data:
+  redis_data:
