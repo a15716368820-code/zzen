@@ -1,32 +1,33 @@
-# 个人博客 (Django)
+# ZZEN AI OS
 
-功能：分类/标签/评论/搜索/RSS + 主题切换（卡片/极简/暗黑）。
+Open source AI Agent Operating System foundation.
 
-## 本地运行
+当前仓库包含 Django 基础平台，并逐步演进为 AI Agent 平台。
+
+## Roadmap
+
+- Agent Runtime
+- Multi-Agent Workflow
+- Knowledge Base / RAG
+- Model Router
+- Enterprise Workspace
+- Plugin Architecture
+
+## Local Run
+
 ```bash
 python -m venv .venv
-.\.venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
-python manage.py createsuperuser
 python manage.py runserver
 ```
 
-访问：`http://127.0.0.1:8000`
+## Docker
 
-## Docker 运行
 ```bash
 docker compose up -d --build
 ```
 
-## 管理后台
-`/admin` 进入后台发布文章、配置站点主题/标题。
+## License
 
-## RSS
-`/rss/`
-
-## 搜索
-首页顶部搜索框。
-
-## 主题
-后台 SiteSetting 里切换：cards/minimal/dark。
+MIT
